@@ -1,6 +1,5 @@
 #!/opt/local/bin/python3.3
 
-import math
 from basemap import basemap
 
 class map2d(basemap):
@@ -9,7 +8,7 @@ class map2d(basemap):
         if x_size > 0:
             self.x_size = x_size
         elif x_size < 0:
-            self.x_size = math.abs(x_size)
+            self.x_size = abs(x_size)
         else:
             #aka, x_size = 0
             raise ValueError("This should be more than 0")
@@ -18,7 +17,7 @@ class map2d(basemap):
         if y_size > 0:
             self.y_size = y_size
         elif y_size < 0:
-            self.y_size = math.abs(y_size)
+            self.y_size = abs(y_size)
         else:
             #aka, y_size = 0
             raise ValueError("This should be more than 0")
