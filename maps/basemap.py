@@ -19,3 +19,6 @@ class basemap(object):
 
     def get_gen_iter(self):
         raise NotImplementedError("This should return a generator function to iterate over all cells")
+
+    def verify_coords(self):
+        raise NotImplementedError("This should verify the coords given are inside the object's range")
