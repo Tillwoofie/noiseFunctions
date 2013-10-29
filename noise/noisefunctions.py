@@ -5,7 +5,7 @@
 import math
 
 def noise1_1d(x):
-    x = (x<<13) ^ x
+    n = (x<<13) ^ x
     return ( 1.0 - ( (n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0)
 
 
@@ -21,7 +21,7 @@ def linear_interpolation(a, b, x):
 
 def cosine_interpolation(a, b, x):
     ft = x * math.pi
-    f = 1 - math.cos(ft)) * 0.5
+    f = (1 - math.cos(ft)) * 0.5
 
     return a*(1-f) + b*f
 
@@ -46,8 +46,8 @@ def interpolated_noise_1d(x, noiseFunc, interpFunc):
     # to generate something from one input variable.
     x_fac = math.pi - 3
 
-    v1 = smoothed_noise_1d(x, nf)
-    v2 = smoothed_noise_1d(x+1, nf)
+    v1 = smooth_noise_1d(x, nf)
+    v2 = smooth_noise_1d(x+1, nf)
 
     return interpFunc(v1, v2, x_fac)
 
@@ -78,7 +78,7 @@ def perlin_noise_1d(x, persistence, octaves, noiseFunc, interpFunc):
         freq = pow(2, i)
         ampl = pow(persistence, i)
 
-        total += interpolated_noise_1d(x * freq) * ampl
+        total += interpolated_noise_1d(x * freq, noiseFunc, interpFunc) * ampl
     return total
 
 
@@ -94,4 +94,4 @@ def perlin_noise_2d(x, y, persistence, octaves, noiseFunc, interpFunc):
 
 if __name__ == '__main__':
     print(noise1_2d(5,7))
-    [ perlin_noise_1d(x) for x in range(30) ]
+    [ perlin_noise_1d(x, 2, 2, noise1_1d, linear_interpolation) for x in range(30) ]
