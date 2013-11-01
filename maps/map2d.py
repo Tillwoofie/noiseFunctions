@@ -1,5 +1,7 @@
 #!/opt/local/bin/python3.3
 
+import site
+site.addsitedir("/Users/jhickson/nonwork/noiseFunctions/")
 from basemap import basemap
 
 class map2d(basemap):
@@ -54,6 +56,13 @@ class map2d(basemap):
             return False
 
 
+    def gen_noise(self, persistence, octaves, noiseType, noiseFunction, interpFunction):
+        self.data = [[ noiseType(x, y, persistence, octaves, noiseFunction, interpFunction) \
+            for x in range(self.x_size)] for y in range(self.y_size)]
+
+        
+
+
 def coord_order_test():
     x_size = 5
     y_size = 3
@@ -71,5 +80,11 @@ def self_test():
         print("yay all good")
 
 
+def image_test():
+    q = map2d(100,100)
+    q.gen_noise(2, 2, perlin_noise_2d, noise1_2d, linear_interpolation)
+
+
 if __name__ == '__main__':
     self_test()
+    image_test()

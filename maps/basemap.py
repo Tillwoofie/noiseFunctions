@@ -22,3 +22,6 @@ class basemap(object):
 
     def verify_coords(self):
         raise NotImplementedError("This should verify the coords given are inside the object's range")
+
+    def gen_noise(self,  persistence, octaves, noiseFunction, interpFunction):
+        raise NotImplementedError("This triggers noise to be generated and stored in the object.")
