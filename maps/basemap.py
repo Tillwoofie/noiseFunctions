@@ -25,3 +25,6 @@ class basemap(object):
 
     def gen_noise(self,  persistence, octaves, noiseFunction, interpFunction):
         raise NotImplementedError("This triggers noise to be generated and stored in the object.")
+
+    def to_image(self):
+        raise NotImplementedError("This should return a pillow image object")

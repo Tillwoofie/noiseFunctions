@@ -3,6 +3,7 @@
 import site
 site.addsitedir("/Users/jhickson/nonwork/noiseFunctions/")
 from basemap import basemap
+from PIL import Image
 
 class map2d(basemap):
     def __init__(self, x_size, y_size):
@@ -61,6 +62,23 @@ class map2d(basemap):
             for x in range(self.x_size)] for y in range(self.y_size)]
 
         
+    def to_image(self):
+        #floating point values between 0-256
+        img = Image.new("F", (self.x_size, self.y_size), 256.0 )
+        
+        img.putdata(self._stream_conv_data())
+        return img
+    
+    
+    def _convert_range(val):
+        #convert values from noise range (-1.0 - 1.0) to (0.0 - 256.0)
+        return (val + 1.0) * 128.0
+    
+    
+    def _stream_conv_data(self):
+        for x in range(self.x_size):
+            for y in range(self.y_size):
+                yield _convert_range(self.data[x][y])
 
 
 def coord_order_test():
@@ -81,8 +99,12 @@ def self_test():
 
 
 def image_test():
+    import noise.noisefunctions as nf
     q = map2d(100,100)
-    q.gen_noise(2, 2, perlin_noise_2d, noise1_2d, linear_interpolation)
+    q.gen_noise(2, 2, nf.perlin_noise_2d, nf.noise1_2d, nf.linear_interpolation)
+
+    img = q.to_image()
+    img.show()
 
 
 if __name__ == '__main__':
