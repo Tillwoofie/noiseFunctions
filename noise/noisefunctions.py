@@ -58,8 +58,14 @@ def interpolated_noise_2d(x, y, noiseFunc, interpFunc):
 
     # need 2 repeatable (non-random) factors to interp by...
     # going to try this, but don't know how good it will work...
-    x_fac = ( float(x) / float(y) ) % 1
-    y_fac = ( float(y) / float(x) ) % 1
+    if y == 0:
+        x_fac = ( float(x) / 1.0 ) % 1
+    else:
+        x_fac = ( float(x) / float(y) ) % 1
+    if x == 0:
+        y_fac = ( float(y) / 1.0 ) % 1
+    else:
+        y_fac = ( float(y) / float(x) ) % 1
 
     v1 = smooth_noise_2d(x, y, nf)
     v2 = smooth_noise_2d(x+1, y, nf)
@@ -94,4 +100,7 @@ def perlin_noise_2d(x, y, persistence, octaves, noiseFunc, interpFunc):
 
 if __name__ == '__main__':
     print(noise1_2d(5,7))
-    [ perlin_noise_1d(x, 2, 2, noise1_1d, linear_interpolation) for x in range(30) ]
+    q = [ perlin_noise_1d(x, 2, 2, noise1_1d, linear_interpolation) for x in range(30) ]
+    print(q)
+    n = [[ perlin_noise_2d(x,y,2,2, noise1_2d, linear_interpolation) for y in range(1,6)] for x in range(1,6) ] 
+    print(n)
