@@ -55,7 +55,8 @@ def interpolated_noise_1d(x, noiseFunc, interpFunc):
 
     # this shouldn't be a static value, but i don't know a decent way
     # to generate something from one input variable.
-    x_fac = math.pi - 3
+    # old way of this
+    #x_fac = math.pi - 3
 
     v1 = smooth_noise_1d(x, nf)
     v2 = smooth_noise_1d(x+1, nf)
@@ -69,18 +70,24 @@ def interpolated_noise_2d(x, y, noiseFunc, interpFunc):
 
     # need 2 repeatable (non-random) factors to interp by...
     # going to try this, but don't know how good it will work...
-    x_fac = ( float(x or 1) / float(y or 1) ) % 1
-    y_fac = ( float(y or 1) / float(x or 1) ) % 1
+    # old form of this for int-only
+    #x_fac = ( float(x or 1) / float(y or 1) ) % 1
+    #y_fac = ( float(y or 1) / float(x or 1) ) % 1
 
-    v1 = smooth_noise_2d(x, y, nf)
-    v2 = smooth_noise_2d(x+1, y, nf)
-    v3 = smooth_noise_2d(x, y+1, nf)
-    v4 = smooth_noise_2d(x+1, y+1, nf)
+    int_x = int(x)
+    frac_x = x - int_x
+    int_y = int(y)
+    frac_y = y - int_y
 
-    i1 = inf(v1, v2, 0)
-    i2 = inf(v3, v4, 0)
+    v1 = smooth_noise_2d(int_x, int_y, nf)
+    v2 = smooth_noise_2d(int_x+1, int_y, nf)
+    v3 = smooth_noise_2d(int_x, int_y+1, nf)
+    v4 = smooth_noise_2d(int_x+1, int_y+1, nf)
 
-    return inf(i1, i2, 0)
+    i1 = inf(v1, v2, frac_x)
+    i2 = inf(v3, v4, frac_x)
+
+    return inf(i1, i2, frac_y)
 
 
 def perlin_noise_1d(x, persistence, octaves, noiseFunc, interpFunc):

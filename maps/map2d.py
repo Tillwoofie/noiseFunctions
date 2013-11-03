@@ -6,8 +6,9 @@ from basemap import basemap
 from PIL import Image
 
 class map2d(basemap):
-    def __init__(self, x_size, y_size):
+    def __init__(self, x_size, y_size, scaling_factor):
         #x verification
+        self.scale = scaling_factor
         if x_size > 0:
             self.x_size = x_size
         elif x_size < 0:
@@ -58,7 +59,8 @@ class map2d(basemap):
 
 
     def gen_noise(self, persistence, octaves, noiseType, noiseFunction, interpFunction):
-        self.data = [[ noiseType(x, y, persistence, octaves, noiseFunction, interpFunction) \
+        self.data = [[ noiseType(float(x)/float(self.scale), float(y)/float(self.scale), \
+            persistence, octaves, noiseFunction, interpFunction) \
             for x in range(self.x_size)] for y in range(self.y_size)]
 
         
@@ -66,14 +68,18 @@ class map2d(basemap):
         self.data = [[ noiseType(x,y) for x in range(self.x_size)] for y in range(self.y_size)]
 
 
-    def to_image(self):
+    def to_image(self, colour):
         #floating point values between 0-256
-        #img = Image.new("F", (self.x_size, self.y_size), 256.0 )
-        img = Image.new("RGB", (self.x_size, self.y_size), (256, 256, 256) )
+        if colour:
+            img = Image.new("RGB", (self.x_size, self.y_size), (256, 256, 256) )
+        else:
+            img = Image.new("F", (self.x_size, self.y_size), 256.0 )
         
         for x, y, data in self._stream_conv_data():
-            #img.putpixel((x,y), (int(data), 73, 130))
-            img.putpixel((x,y), cosine_colourize(data))
+            if colour:
+                img.putpixel((x,y), cosine_colourize(data))
+            else:
+                img.putpixel((x,y), data):
         #img.putdata(self._stream_conv_data())
         return img
     
@@ -107,7 +113,7 @@ def cosine_colourize(x):
 def coord_order_test():
     x_size = 5
     y_size = 3
-    test_map = map2d(x_size,y_size)
+    test_map = map2d(x_size,y_size, 1)
 
     size = test_map.get_size()
     if size[0] == x_size and size[1] == y_size:
@@ -126,14 +132,14 @@ def test_cos_col():
         print("X:{} Colour:{}".format(x, cosine_colourize(x)))
 
 
-def image_test():
+def image_test(colour):
     import noise.noisefunctions as nf
     import math
-    q = map2d(100,100)
+    q = map2d(100,100, 1)
     q.gen_noise(1.0/math.sqrt(2), 5, nf.perlin_noise_2d, nf.noise1_2d, nf.cosine_interpolation)
     #q._test_gen_noise_func(nf.noise1_2d)
 
-    img = q.to_image()
+    img = q.to_image(False)
     img.show()
 
 
