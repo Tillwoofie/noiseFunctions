@@ -79,7 +79,7 @@ class map2d(basemap):
             if colour:
                 img.putpixel((x,y), cosine_colourize(data))
             else:
-                img.putpixel((x,y), data):
+                img.putpixel((x,y), data)
         #img.putdata(self._stream_conv_data())
         return img
     
@@ -139,11 +139,11 @@ def image_test(colour):
     q.gen_noise(1.0/math.sqrt(2), 5, nf.perlin_noise_2d, nf.noise1_2d, nf.cosine_interpolation)
     #q._test_gen_noise_func(nf.noise1_2d)
 
-    img = q.to_image(False)
+    img = q.to_image(colour)
     img.show()
 
 
 if __name__ == '__main__':
     self_test()
     #test_cos_col()
-    image_test()
+    image_test(False)
