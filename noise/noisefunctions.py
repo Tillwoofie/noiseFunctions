@@ -2,13 +2,16 @@
 
 # a collections of noise functions
 
+import site
 import math
+site.addsitedir("/Users/jhickson/nonwork/noiseFunctions/")
+from util.cache import *
 
 def noise1_1d(x):
     n = (x<<13) ^ x
     return ( 1.0 - ( (n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0)
 
-
+#@Cachable(1000)
 def noise1_2d(x, y):
     #n = x + y * 57
     n = x * 17483 + y * 19979
@@ -58,10 +61,13 @@ def interpolated_noise_1d(x, noiseFunc, interpFunc):
     # old way of this
     #x_fac = math.pi - 3
 
-    v1 = smooth_noise_1d(x, nf)
-    v2 = smooth_noise_1d(x+1, nf)
+    int_x = int(x)
+    frac_x = x - int_x
 
-    return interpFunc(v1, v2, x_fac)
+    v1 = smooth_noise_1d(int_x, nf)
+    v2 = smooth_noise_1d(int_x+1, nf)
+
+    return interpFunc(v1, v2, frac_x)
 
 
 def interpolated_noise_2d(x, y, noiseFunc, interpFunc):
@@ -109,9 +115,19 @@ def perlin_noise_2d(x, y, persistence, octaves, noiseFunc, interpFunc):
         total += interpolated_noise_2d(x * freq, y * freq, noiseFunc, interpFunc) * ampl
     return total
 
+@timeme
+def timeTest():
+    #to time the run-time of a set function.
+    b = [[ perlin_noise_2d(x,y,2,2,noise1_2d, linear_interpolation) for y in range(1,50)] for x in range(1,50)]
+    print(len(b))
 
 if __name__ == '__main__':
     print(noise1_2d(5,7))
+    print("First fun")
+    timeTest()
+    print("Second Run")
+    timeTest()
+
     q = [ perlin_noise_1d(x, 2, 2, noise1_1d, linear_interpolation) for x in range(30) ]
     print(q)
     n = [[ perlin_noise_2d(x,y,2,2, noise1_2d, linear_interpolation) for y in range(1,6)] for x in range(1,6) ] 

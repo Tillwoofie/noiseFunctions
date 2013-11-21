@@ -2,6 +2,8 @@
 
 # a cachable wrapper that implements a cache for called args.
 
+import time
+
 class Cachable(object):
     def __init__(self, size=100):
         self.size = size
@@ -15,15 +17,15 @@ class Cachable(object):
                 return self.get_cache(args)
             else: #if not, run function
                 x = f(*args)
-                self.add_cache(args)
+                self.add_cache(args,x)
                 return x
         return wrapped_f
 
     def in_cache(self, key):
         if key in self.cache:
-            return true
+            return True
         else:
-            return false
+            return False
 
     def add_cache(self, key, val):
         if len(self.cache) > self.size:
@@ -48,3 +50,13 @@ class Cachable(object):
     def get_cache(self, key):
         self.cache[key][0] += 1
         return self.cache[key][1]
+
+def timeme(f):
+    #simple decorator that times execution of wrapped function.
+    def wrapped_f(*args):
+        one = time.time()
+        x = f(*args)
+        elapsed = time.time() - one
+        print("Function run time: {}".format(elapsed))
+        return x
+    return wrapped_f
