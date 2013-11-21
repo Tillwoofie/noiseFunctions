@@ -135,12 +135,14 @@ def test_cos_col():
 def image_test(colour):
     import noise.noisefunctions as nf
     import math
-    q = map2d(100,100, 1)
+    import sys
+    q = map2d(500,500, 10)
     q.gen_noise(1.0/math.sqrt(2), 5, nf.perlin_noise_2d, nf.noise1_2d, nf.cosine_interpolation)
     #q._test_gen_noise_func(nf.noise1_2d)
 
     img = q.to_image(colour)
     img.show()
+    #print(sys.getsizeof(q.data))
 
 
 if __name__ == '__main__':
