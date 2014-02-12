@@ -4,7 +4,7 @@
 
 import site
 import math
-site.addsitedir("/Users/jhickson/nonwork/noiseFunctions/")
+site.addsitedir("../")
 from util.cache import *
 
 def noise1_1d(x):

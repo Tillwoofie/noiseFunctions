@@ -1,7 +1,7 @@
 #!/opt/local/bin/python3.3
 
 import site
-site.addsitedir("/Users/jhickson/nonwork/noiseFunctions/")
+site.addsitedir("../")
 from basemap import basemap
 from PIL import Image
 
